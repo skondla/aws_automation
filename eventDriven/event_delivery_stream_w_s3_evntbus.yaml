@@ -1,0 +1,338 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: The AWS CloudFormation template for Kinesis Stream
+Parameters:
+  Environment:
+    Type: String
+    Description: Environment name - dev, qa, qa1 or prod
+    AllowedValues:
+      - dev
+      - qa
+      - qa1
+      - prod
+    ConstraintDescription: Must be dev, qa, or prod
+
+Mappings:
+  Constant:
+    Value:
+      #Name: opled
+      Name: delivery-events
+  Environment:
+    dev:
+      S3LogBucket: event-data-2
+    qa:
+      S3LogBucket: event-data-2
+    qa1:
+      S3LogBucket: event-data-2
+    prod:
+      S3LogBucket: event-data-2
+
+Resources:
+  KinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      Name: !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Ref Environment
+      RetentionPeriodHours: 168
+      ShardCount: 8
+
+  KinesisFirehoseDeliveryStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    DependsOn:
+      - FirehoseDeliveryIAMPolicy
+    Properties:
+      DeliveryStreamName: !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Ref Environment
+      DeliveryStreamType: KinesisStreamAsSource
+      KinesisStreamSourceConfiguration:
+         KinesisStreamARN: !GetAtt KinesisStream.Arn
+         RoleARN: !GetAtt FirehoseDeliveryIAMRole.Arn
+      S3DestinationConfiguration:
+         BucketARN: !GetAtt S3Bucket.Arn
+         Prefix: event-data/
+         BufferingHints:
+           IntervalInSeconds: 60
+           SizeInMBs: 100
+         CloudWatchLoggingOptions:
+           Enabled: false
+         CompressionFormat: UNCOMPRESSED
+         RoleARN: !GetAtt FirehoseDeliveryIAMRole.Arn
+         ##Added 11/20/2020
+         ProcessingConfiguration:
+          Enabled: 'true'
+          Processors:
+            - Parameters:
+                - ParameterName: LambdaArn
+                  ParameterValue: !GetAtt FireHoseInlineTransformLambda.Arn 
+              Type: Lambda 
+
+  FirehoseDeliveryIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:  !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Ref Environment
+      PermissionsBoundary: !Sub "arn:aws:iam::${AWS::AccountId}:policy/GithubActionsIamResourcePermissionsBoundary"
+      ManagedPolicyArns:
+        - !Ref FirehoseDeliveryIAMPolicy
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: sts:AssumeRole
+
+  FirehoseDeliveryIAMPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Ref Environment
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:AbortMultipartUpload
+              - s3:GetBucketLocation
+              - s3:GetObject
+              - s3:ListBucket
+              - s3:ListBucketMultipartUploads
+              - s3:PutObject
+              - s3:PutObjectAcl
+            Resource:
+              - !Join
+                - ''
+                - - !GetAtt S3Bucket.Arn
+              - !Join
+                - ''
+                - - !GetAtt S3Bucket.Arn
+                  - '*'
+          - Effect: Allow
+            Action:
+              - kinesis:DescribeStream
+              - kinesis:GetShardIterator
+              - kinesis:GetRecords
+              - lambda:InvokeFunction
+              - lambda:GetFunctionConfiguration
+            Resource: !GetAtt KinesisStream.Arn
+            #Add Lambda inline transformation on Firehose ARN here when available.
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Sub ${Environment}-${AWS::Region}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 3
+            ExpirationInDays: 90
+            Status: Enabled
+      LoggingConfiguration:
+        DestinationBucketName: !FindInMap [Environment, !Ref Environment, S3LogBucket]
+        LogFilePrefix: !Join
+          - ''
+          - - 'event-data-2/'
+            - !FindInMap [Constant, Value, Name]
+            - '-'
+            - !Sub ${Environment}-${AWS::Region}
+
+  OpledAthenaDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: !Join
+          - '_'
+          - - !FindInMap [Constant, Value, Name]
+            - !Ref Environment
+
+  EventBus:
+    Type: AWS::Events::EventBus
+    Properties:
+      Name: !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Ref Environment
+    DependsOn:
+      - KinesisStream
+
+  # ----------
+  # EventBus Policy
+  # ----------
+
+  EventBusRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:  !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Ref Environment
+          - "eventbusrole"
+      PermissionsBoundary: !Sub "arn:aws:iam::${AWS::AccountId}:policy/GithubActionsIamResourcePermissionsBoundary"
+      ManagedPolicyArns:
+        - !Ref EventBusPolicy
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+            
+
+  EventBusPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Ref Environment
+          #- qa2
+          - "eventbuspolicy"
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - kinesis:PutRecord
+              - kinesis:PutRecords
+              - kinesis:DescribeStream
+              - kinesis:GetRecords
+              - kinesis:ListStreams
+              - kinesis:ListShards
+              - deliverystream:PutRecord
+              - deliverystream:PutRecordBatch
+              - deliverystream:ListDeliveryStreams
+              - deliverystream:DescribeDeliveryStream
+            #Resource: !GetAtt KinesisStream.Arn
+            Resource:
+              - !Join
+                - ''
+                - - !GetAtt KinesisStream.Arn
+              - !Join
+                - ''
+                - - !GetAtt KinesisStream.Arn
+                  - '*'
+
+
+    # ----------
+    # EventBus Rule(s)
+    # ----------
+
+  KinesisStreamEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      EventBusName:
+        Ref: EventBus
+      EventPattern:
+        # source:
+        #   - anything-but: external
+        detail-type:
+          - bringgs-webhook-submitted
+        #detail:
+        #  type:
+             #- ${AWS::AccountId} 
+          #  - AWS::AccountId
+            #- bringgs-webhook-submitted
+            #- anything-but: fault  
+      #ScheduleExpression: rate(1 minutes)
+      State: ENABLED
+      Targets:
+        - Id: KinesisStream
+          Arn:
+            Fn::GetAtt: [ KinesisStream, Arn ]
+          RoleArn:
+            Fn::GetAtt: [ EventBusRole, Arn ]
+          KinesisParameters:
+            PartitionKeyPath: $.detail.partitionKey
+          #InputPath: $.detail
+  
+  FireHoseInlineTransformLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: >
+          def lambda_handler(event, context):
+            output = []
+
+            for record in event['records']:
+              print(record['recordId'])
+              payload = base64.b64decode(record['data']).decode('utf-8')
+              payload = payload + "\n"
+              # Do custom processing on the payload here
+              output_record = {
+                'recordId': record['recordId'],
+                'result': 'Ok',
+                'data': base64.b64encode(payload.encode('utf-8')).decode('utf-8')
+              }
+              output.append(output_record)
+            print('Successfully processed {} records.'.format(len(event['records'])))
+            return {'records': output}
+      Handler: index.handler
+      Role:
+        Fn::GetAtt: [ FireHoseInlineTransformLambdaRole , "Arn" ]
+      Runtime: python3.7
+      Timeout: 180
+
+  FireHoseInlineTransformLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:  !Join
+        - '-'
+        - - !FindInMap [Constant, Value, Name]
+          - !Ref Environment
+          - "firehose-inline-transform-role"
+      PermissionsBoundary: !Sub "arn:aws:iam::${AWS::AccountId}:policy/GithubActionsIamResourcePermissionsBoundary"
+      #ManagedPolicyArns:
+      #  - !Ref EventBusPolicy
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+Outputs:
+  kinesisStreamArn:
+    Description: Kinesis Stream ARN
+    Value: !GetAtt KinesisStream.Arn
+  firehoseDeliveryStreamArn:
+     Description: Firehose Delivery Stream ARN
+     Value: !GetAtt KinesisFirehoseDeliveryStream.Arn
+  firehoseDeliveryRoleArn:
+    Description: Firehose Delivery Role ARN
+    Value: !GetAtt FirehoseDeliveryIAMRole.Arn
+  busName:
+    Value:
+      Ref: EventBus
+  busArn:
+    Value:
+      Fn::GetAtt: [ EventBus, Arn ]
+  stream1Name:
+    Value:
+      Ref: KinesisStream
+  stream1Arn:
+    Value:
+      Fn::GetAtt: [ KinesisStream, Arn ]
