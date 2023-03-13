@@ -1,0 +1,12 @@
+pandas==0.24.2
+regex==2019.4.14
+boto3==1.9.232
+boto==2.49.0
+botocore==1.12.232
+botocore-python3
+requests
+urllib3==1.21.1
+jsonify==0.5
+jsonschema==3.0.1
+simplejson==3.16.0
+pymysql==0.9.3

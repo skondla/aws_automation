@@ -1,0 +1,198 @@
+host:10.94.64.67
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+*/10 * * * * /root/bin/diskUsageStatus.sh > /root/bin/diskUsageStatus.log 2>&1
+*/15 * * * * /root/bin/checkHealthScore.sh > /root/bin/checkHealthScore.log 2>&1
+
+##Docker Container scheduling for cloffice PA migration
+
+#0 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/1/dockerRunCopyPA2Target.sh copybookmarks_prod_week1
+#10 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/2/dockerRunCopyPA2Target.sh copybookmarks_prod_week2
+#20 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/3/dockerRunCopyPA2Target.sh copybookmarks_prod_week3
+#0 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/4/dockerRunCopyPA2Target.sh copybookmarks_prod_week4
+#46 02 04 12 3 bash /data2/container_builds/prod/dockerized/copy/weeks/5/dockerRunCopyPA2Target.sh copybookmarks_prod_week5
+#46 02 04 12 3 bash /data2/container_builds/prod/dockerized/copy/weeks/6/dockerRunCopyPA2Target.sh copybookmarks_prod_week6
+
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3Uploader.sh cp-bookmark-monthly-container-local eu-west-1 > /data2/container_builds/prod/dockerized/load_local/weeks/3Uploader.log 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201806 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201806 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201707 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201707 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3Mover.sh cp-bookmark-monthly-container-local eu-west-1 201806 > /data2/container_builds/prod/dockerized/load_local/weeks/s3Mover.log.201806 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3Mover.sh cp-bookmark-monthly-container-local eu-west-1 201707 > /data2/container_builds/prod/dockerized/load_local/weeks/s3Mover.log.201707 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201803  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201803 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201802  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201802 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201801  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201801 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201712  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201712 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201711  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201711 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201710  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201710 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201709  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201709 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201708  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201708 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201707  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201709 2>&1
+#*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201706  10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201706 2>&1
+host:10.94.64.18
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+*/10 * * * * /root/bin/diskUsageStatus.sh > /root/bin/diskUsageStatus.log 2>&1
+*/15 * * * * /root/bin/checkHealthScore.sh > /root/bin/checkHealthScore.log 2>&1
+
+##Docker Container scheduling for cloffice PA migration
+
+#0 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/1/dockerRunCopyPA2Target.sh copybookmarks_prod_week1
+#10 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/2/dockerRunCopyPA2Target.sh copybookmarks_prod_week2
+#20 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/3/dockerRunCopyPA2Target.sh copybookmarks_prod_week3
+#0 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/4/dockerRunCopyPA2Target.sh copybookmarks_prod_week4
+#46 02 04 12 3 bash /data2/container_builds/prod/dockerized/copy/weeks/5/dockerRunCopyPA2Target.sh copybookmarks_prod_week5
+#46 02 04 12 3 bash /data2/container_builds/prod/dockerized/copy/weeks/6/dockerRunCopyPA2Target.sh copybookmarks_prod_week6
+
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3Uploader.sh cp-bookmark-monthly-container-local eu-west-1 > /data2/container_builds/prod/dockerized/load_local/weeks/s3Uploader.log 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201810 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201810 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201809 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201809 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201808 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201808 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201804 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201804 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201803 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201803 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201811 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201811 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201810 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201810 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201809 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201809 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201808 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201808 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201807 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201807 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201806 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201806 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201805 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201805 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201804 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201804 2>&1
+host:10.94.64.39
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+*/10 * * * * /root/bin/diskUsageStatus.sh > /root/bin/diskUsageStatus.log 2>&1
+*/15 * * * * /root/bin/checkHealthScore.sh > /root/bin/checkHealthScore.log 2>&1
+
+##Docker Container scheduling for cloffice PA migration
+
+#0 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/1/dockerRunCopyPA2Target.sh copybookmarks_prod_week1
+#10 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/2/dockerRunCopyPA2Target.sh copybookmarks_prod_week2
+#20 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/3/dockerRunCopyPA2Target.sh copybookmarks_prod_week3
+#0 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/4/dockerRunCopyPA2Target.sh copybookmarks_prod_week4
+#46 02 04 12 3 bash /data2/container_builds/prod/dockerized/copy/weeks/5/dockerRunCopyPA2Target.sh copybookmarks_prod_week5
+#46 02 04 12 3 bash /data2/container_builds/prod/dockerized/copy/weeks/6/dockerRunCopyPA2Target.sh copybookmarks_prod_week6
+
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3Uploader.sh cp-bookmark-monthly-container-local eu-west-1 > /data2/container_builds/prod/dockerized/load_local/weeks/s3Uploader.log 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201905 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201905 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201906 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201906 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201901 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201901 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201812 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201812 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201811 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201811 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201906 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201906 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201905 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201905 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201904 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201904 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201903 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201903 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201902 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201902 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201901 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201901 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201812 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201812 2>&1
+host:10.94.64.161
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+*/10 * * * * /root/bin/diskUsageStatus.sh > /root/bin/diskUsageStatus.log 2>&1
+*/15 * * * * /root/bin/checkHealthScore.sh > /root/bin/checkHealthScore.log 2>&1
+
+##Docker Container scheduling for cloffice PA migration
+
+#0 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/1/dockerRunCopyPA2Target.sh copybookmarks_prod_week1
+#10 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/2/dockerRunCopyPA2Target.sh copybookmarks_prod_week2
+#20 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/3/dockerRunCopyPA2Target.sh copybookmarks_prod_week3
+#0 14 2 12 1 bash /data2/container_builds/prod/dockerized/copy/weeks/4/dockerRunCopyPA2Target.sh copybookmarks_prod_week4
+#46 02 04 12 3 bash /data2/container_builds/prod/dockerized/copy/weeks/5/dockerRunCopyPA2Target.sh copybookmarks_prod_week5
+#46 02 04 12 3 bash /data2/container_builds/prod/dockerized/copy/weeks/6/dockerRunCopyPA2Target.sh copybookmarks_prod_week6
+
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3Uploader.sh cp-bookmark-monthly-container-local eu-west-1 > /data2/container_builds/prod/dockerized/load_local/weeks/s3Uploader.log 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201909 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201909 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201908 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201908 2>&1
+#* * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderMulti.sh cp-bookmark-monthly-container-local eu-west-1 201907 > /data2/container_builds/prod/dockerized/load_local/weeks/s3UploaderiMulti.log.201907 2>&1
+#*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmarks-multi-upload eu-west-1 201907 30  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201907 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201907 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201907 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201908 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201908 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201909 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201909 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201910 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201910 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201911 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201911 2>&1
+*/5 * * * * /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.sh cp-bookmark-monthly-container-local2 eu-west-1 201912 10  > /data2/container_builds/prod/dockerized/load_local/weeks/checkS3ParallelPut.log.201912 2>&1
+
+
+#Check bucket Count
+
+0 * * * * /usr/bin/time /bin/bash /data2/container_builds/prod/dockerized/load_local/weeks/bucketObjCount.sh cp-bookmark-monthly-container-local2 >> /data2/container_builds/prod/dockerized/load_local/weeks/bucketObjCount.log 2>&1

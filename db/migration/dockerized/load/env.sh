@@ -1,0 +1,11 @@
+shost=cp-prod-pamigrate.cluster-ct2oghm9eyns.eu-west-1.rds.amazonaws.com
+sport=3306
+suser=cloffice
+spassword=ott_perf2_cloffice_db_password
+sdatabase=cloffice
+thost=cloffice-pa-migration.cluster-ct2oghm9eyns.eu-west-1.rds.amazonaws.com
+tport=5432
+tuser=prodapp
+tpassword=cloffice-migration-pa
+tdatabase=prod
+region=eu-west-1

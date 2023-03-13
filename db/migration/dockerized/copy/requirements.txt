@@ -1,0 +1,14 @@
+uuid==1.30
+psycopg2==2.8.2
+psycopg2-binary==2.8.3
+pymysql==0.9.3
+boto3==1.9.232
+boto==2.49.0
+botocore==1.12.232
+botocore-python3
+requests
+urllib3==1.21.1
+jsonify==0.5
+jsonschema==3.0.1
+simplejson==3.16.0
+python-dateutil==2.8.0
