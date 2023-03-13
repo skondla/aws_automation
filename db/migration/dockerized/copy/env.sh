@@ -9,4 +9,4 @@ tuser=prod_multi_app
 tpassword=cloffice-migration-pa
 tdatabase=prod_multi
 region=eu-west-1
-squery=select subscriberIdentityGuid, 'default', assetGuid,bookmarkSecs,UNIX_TIMESTAMP(lastUpdated) as lastUpdated from PlayedAsset where lastUpdated > date_sub(now(), interval 26 week ) and lastUpdated <= date_sub(now(), interval 25 week)
+squery=select subscriberIdentityGuid, 'default', assetGuid,bookmarkSecs,UNIX_TIMESTAMP(lastUpdated) as lastUpdated from StreamedAsset where lastUpdated > date_sub(now(), interval 26 week ) and lastUpdated <= date_sub(now(), interval 25 week)

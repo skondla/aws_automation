@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #Author: skondla@me.com
-#purpose: Load Cloffice PlayedAsset data to S3 by account_id
+#purpose: Load Customers StreamedAsset data to S3 by account_id
 # -*- coding: utf-8 -*-
 
 #import boto3
@@ -30,7 +30,7 @@ def checkBucket(bucketName,region):
             createS3().createBucketPolicy(bucketName)
             encryptS3().encryptBucket(bucketName)
 
-def readPlayedAssetData(bucketName):
+def readStreamedAssetData(bucketName):
     #setEnv.setEnv()
     try:
 
@@ -44,10 +44,10 @@ def readPlayedAssetData(bucketName):
 
         cursor1 = conn.cursor()
         cursor2 = conn.cursor()
-        #query1 = "select distinct(subscriberIdentityGuid) from PlayedAsset"
+        #query1 = "select distinct(subscriberIdentityGuid) from StreamedAsset"
         query1 = os.environ['squery1']
         query2 = os.environ['squery2']
-        #query2 = "select assetGuid as asset_id, bookmarkSecs as position, UNIX_TIMESTAMP(lastUpdated) as position_epoch from PlayedAsset where subscriberIdentityGuid = %s"
+        #query2 = "select assetGuid as asset_id, bookmarkSecs as position, UNIX_TIMESTAMP(lastUpdated) as position_epoch from StreamedAsset where subscriberIdentityGuid = %s"
         cursor1.execute(query1)
 
         for subscriberIdentityGuid in iter_row(cursor1, 5000):
@@ -62,7 +62,7 @@ def readPlayedAssetData(bucketName):
             #results.to_csv("data/" + str(email) + "-bookmarks.txt", index=False)
         
     except (Exception,pymysql.Error) as myError:
-        print ("Error selecting from PlayedAsset table DB host: " \
+        print ("Error selecting from StreamedAsset table DB host: " \
             + os.environ['shost'], myError)
     
     finally:
@@ -92,6 +92,6 @@ if __name__ == "__main__":
         region = sys.argv[2]
         region = os.environ['region']
         checkBucket(bucketName,region)
-        readPlayedAssetData(bucketName)
+        readStreamedAssetData(bucketName)
 
 

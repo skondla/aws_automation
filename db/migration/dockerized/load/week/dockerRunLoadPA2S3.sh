@@ -1,6 +1,6 @@
 #!/bin/bash
 #Author: skondla@me.com
-#Purpose run Docker container to upload PlayedAsset data to S3 bucket
+#Purpose run Docker container to upload StreamedAsset data to S3 bucket
 
 if [ $# -lt 2 ];
 then

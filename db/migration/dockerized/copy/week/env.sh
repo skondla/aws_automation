@@ -9,5 +9,5 @@ tuser=weeklyapp
 tpassword=cloffice-migration-pa
 tdatabase=weekly
 region=eu-west-1
-squery=select subscriberIdentityGuid, 'default', tenantId, assetGuid,bookmarkSecs,UNIX_TIMESTAMP(lastUpdated) as lastUpdated from PlayedAsset where lastUpdated > date_sub(now(), interval 180 day ) and lastUpdated <= date_sub(now(), interval 173 day);
+squery=select subscriberIdentityGuid, 'default', tenantId, assetGuid,bookmarkSecs,UNIX_TIMESTAMP(lastUpdated) as lastUpdated from StreamedAsset where lastUpdated > date_sub(now(), interval 180 day ) and lastUpdated <= date_sub(now(), interval 173 day);
 tag=copybookmarks_prod_week1

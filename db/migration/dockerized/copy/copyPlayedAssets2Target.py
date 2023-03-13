@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #Author: skondla@me.com
-#purpose: Copy 6 months Cloffice PlayedAsset data to Target PostgreSQL dB.
+#purpose: Copy 6 months Customers StreamedAsset data to Target PostgreSQL dB.
 # -*- coding: utf-8 -*-
 
 import pymysql, re
@@ -8,7 +8,7 @@ import pymysql, re
 import os, sys, psycopg2, uuid, datetime, json, requests
 import utils
 
-def copyPlayedAssetData():
+def copyStreamedAssetData():
     #setEnv.setEnv()
     mypassword = utils.getPassword(os.environ['spassword'],os.environ['region'])
     pgpassword = utils.getPassword(os.environ['tpassword'],os.environ['region'])
@@ -90,7 +90,7 @@ def copyPlayedAssetData():
         slackPost(os.environ['shost'],tag,myError, "MySQL Error of")
         sendEmail(os.environ['thost'],tag,pgError) 
         #myconn.commit()
-        print ("Error selecting from PlayedAsset table DB host: " \
+        print ("Error selecting from StreamedAsset table DB host: " \
             + os.environ['shost'], myError)
 
     except (Exception, psycopg2.Error) as pgError:
@@ -126,7 +126,7 @@ def slackPost(*args):
     slackPost(os.environ['thost'],tag,pgError, "Postgres Error of")
     today = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     webhook_url = 'https://hooks.slack.com/services/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' 
-    slack_data = {"channel": "@skondla", "username": "PlayedAsset Migration", 'text': today + ": " + args[3] + "Host: " + args[0] + " Tag: " + \
+    slack_data = {"channel": "@skondla", "username": "StreamedAsset Migration", 'text': today + ": " + args[3] + "Host: " + args[0] + " Tag: " + \
             args[1] + " Error: " + args[2] + \
             " for dB Endpoint: "  + args[1], "icon_emoji": ":man-biking:"}
 
@@ -148,5 +148,5 @@ def sendEmail(*args):
                  " for dB: "  + args[1] + "|mailx -s 'PA MIGRATION status'" + email_distro)
 
 if __name__ == "__main__":
-    copyPlayedAssetData()
+    copyStreamedAssetData()
 

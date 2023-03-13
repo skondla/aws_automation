@@ -1,2 +1,2 @@
 #!/bin/bash
-ps aux | head -1 && ps aux | grep loadPlayedAssets2S3
+ps aux | head -1 && ps aux | grep loadStreamedAssets2S3

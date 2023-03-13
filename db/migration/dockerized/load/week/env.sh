@@ -9,8 +9,8 @@ tuser=weeklyapp
 tpassword=cloffice-migration-pa
 tdatabase=weekly
 region=eu-west-1
-#squery1=select distinct(subscriberIdentityGuid) from PlayedAsset where lastUpdated > date_sub(now(), interval 180 day ) and lastUpdated <= date_sub(now(), interval 173 day)
-#squery1=select distinct(subscriberIdentityGuid) from PlayedAsset where lastUpdated > date_sub(now(), interval 180 day ) and lastUpdated <= date_sub(now(), interval 173 day) and subscriberIdentityGuid is not null
-squery1=select subscriberIdentityGuid from PlayedAsset where lastUpdated > date_sub(now(), interval 180 day ) and lastUpdated <= date_sub(now(), interval 173 day) and subscriberIdentityGuid is not null
-squery2=select assetGuid as asset_id, bookmarkSecs as position, UNIX_TIMESTAMP(lastUpdated) as position_epoch from PlayedAsset where subscriberIdentityGuid = %s
+#squery1=select distinct(subscriberIdentityGuid) from StreamedAsset where lastUpdated > date_sub(now(), interval 180 day ) and lastUpdated <= date_sub(now(), interval 173 day)
+#squery1=select distinct(subscriberIdentityGuid) from StreamedAsset where lastUpdated > date_sub(now(), interval 180 day ) and lastUpdated <= date_sub(now(), interval 173 day) and subscriberIdentityGuid is not null
+squery1=select subscriberIdentityGuid from StreamedAsset where lastUpdated > date_sub(now(), interval 180 day ) and lastUpdated <= date_sub(now(), interval 173 day) and subscriberIdentityGuid is not null
+squery2=select assetGuid as asset_id, bookmarkSecs as position, UNIX_TIMESTAMP(lastUpdated) as position_epoch from StreamedAsset where subscriberIdentityGuid = %s
 tag=loadbookmarks_prod_week1

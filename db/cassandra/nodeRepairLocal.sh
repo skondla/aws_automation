@@ -1,7 +1,7 @@
 #!/bin/bash
 #Author: Sudheer Kondla, skondla@Me.com 
-#pip install pygments
-#pip install jsbeautifier
+#Purpose: Repair Cassandra cluster
+#Usage: ./nodeRepairLocal.sh elasticIP appId Cass-tve-pre default CL-KP-VPC-IAD-NFL
 if [ $# -lt 5 ];
 then
     echo "USAGE: $0 [Attribute_name Where_condition Cassandra_Cluster_name AWS_profile{default|prod} key_name]"
