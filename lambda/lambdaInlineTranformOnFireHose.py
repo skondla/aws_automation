@@ -1,3 +1,6 @@
+# Author: Sudheer Kondla, 03/20/19, skondla@me.com
+# Purpose: This lambda function is used to transform the data from the firehose stream
+
 from __future__ import print_function
 
 import base64

@@ -1,4 +1,7 @@
  
+# Author: Sudheer Kondla, 03/20/19, skondla@me.com
+# Purpose: This script is used to produce records to the kinesis stream
+
 import json
 import boto3
 import random
