@@ -10,7 +10,7 @@ BEGIN
 	DECLARE v_month INT;
 	DECLARE v_monthyear VARCHAR(6);
 	DECLARE cursor_dist_subsc CURSOR FOR 
-	select distinct subscriberIdentityGuid from PlayedAsset USE INDEX (idx_PlayedAsset_lastUpdated)
+	select distinct subscriberIdentityGuid from ViewedAsset USE INDEX (idx_ViewedAsset_lastUpdated)
 	where date_format(date_sub(lastUpdated , interval v_month month ),'%Y%m') = v_monthyear
 	and subscriberIdentityGuid is not null;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET cursor_finished = 1;
@@ -33,7 +33,7 @@ BEGIN
 	SET @s3URL = CONCAT(@s3URL,@fileAlias,@profile,@fileName);
 	SET @s3URL = CONCAT('\'',@s3URL, '\'') ;
 	set @sql = CONCAT('select `assetGuid` as asset_id, `bookmarkSecs` as position, UNIX_TIMESTAMP(`lastUpdated`) as position_epoch 
-			from PlayedAsset where `subscriberIdentityGuid` = ', @v_subscriberGuid1, ' INTO OUTFILE S3 ', @s3URL ,
+			from ViewedAsset where `subscriberIdentityGuid` = ', @v_subscriberGuid1, ' INTO OUTFILE S3 ', @s3URL ,
 			' FIELDS TERMINATED BY '','' 
 			LINES TERMINATED BY ''\\n'' 
 			OVERWRITE ON');

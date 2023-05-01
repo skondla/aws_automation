@@ -1,5 +1,5 @@
 #!/usr/bin/env python 
-#Author: Sudheer Kondla, sudheer.kondla@ibm.com , 03/20/2017
+#Author: Sudheer Kondla, sudheer.kondla@gmail.com , 03/20/2017
 import boto3
 import sys
 
