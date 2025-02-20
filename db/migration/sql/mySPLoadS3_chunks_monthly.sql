@@ -27,9 +27,9 @@ BEGIN
   FETCH cursor_dist_subsc INTO v_subscriberGuid; 
 	SET  @v_subscriberGuid = v_subscriberGuid;
 	/*SELECT @v_subscriberGuid;*/
-  /*CALL cloffice.`uploadsubGuidtoS3_nochunk`(@`v_subscriberGuid`);*/
+  /*CALL custusr.`uploadsubGuidtoS3_nochunk`(@`v_subscriberGuid`);*/
 	SET @v_subscriberGuid1 = CONCAT('\'',@v_subscriberGuid, '\'') ;
-	SET @s3URL := 's3-eu-west-1://cp-bookmark-from-sql-to-s3-monthly-test2/', @fileAlias := @v_subscriberGuid, @profile := '/default/', @fileName := 'bookmarks.txt';
+	SET @s3URL := 's3-us-west-2://cust-address-from-sql-to-s3-monthly-test2/', @fileAlias := @v_subscriberGuid, @profile := '/default/', @fileName := 'bookmarks.txt';
 	SET @s3URL = CONCAT(@s3URL,@fileAlias,@profile,@fileName);
 	SET @s3URL = CONCAT('\'',@s3URL, '\'') ;
 	set @sql = CONCAT('select `assetGuid` as asset_id, `bookmarkSecs` as position, UNIX_TIMESTAMP(`lastUpdated`) as position_epoch 
